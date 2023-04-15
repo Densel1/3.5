@@ -6,6 +6,8 @@ class figure
 {
 
 protected:
+	bool f = false;
+	bool t = true;
 	int sidesCount;
 	string figureName;
 	void SetSideCount(int sideCount)
@@ -24,8 +26,9 @@ public:
 		return sidesCount;
 	}
 
-	virtual void print_info(bool b)
+	virtual void print_info()
 	{
+		bool b = this->check();
 		cout << figureName << ":" << endl;
 		if (b) cout << "Правильная";
 		else cout << "Неправильная";
@@ -36,8 +39,8 @@ public:
 
 	virtual bool check()
 	{
-		bool c = false;
-		if ((sidesCount == 0) && (figureName == "Фигура")) c = true;
+		bool c = f;
+		if ((sidesCount == 0) && (figureName == "Фигура")) c = t;
 		return c;
 	}
 };
@@ -70,9 +73,9 @@ public:
 		this->angleC = angleC;
 	}
 
-	void print_info(bool b) override
+	void print_info() override
 	{
-		figure::print_info(b);
+		figure::print_info();
 		cout << "Стороны: " << "a=" << sideA
 			<< " b=" << sideB
 			<< " c=" << sideC << endl;
@@ -83,9 +86,8 @@ public:
 
 	bool check() override
 	{
-		bool c = false;
-		if ((sidesCount == 3) && ((angleA + angleB + angleC) == 180)) c = true;
-		else c = false;
+		bool c = f;
+		if ((sidesCount == 3) && ((angleA + angleB + angleC) == 180)) c = t;
 		return c;
 	}
 };
@@ -111,9 +113,9 @@ public:
 
 	}
 
-	void print_info(bool b) override
+	void print_info() override
 	{
-		figure::print_info(b);
+		figure::print_info();
 		cout << "Стороны: " << "a = " << sideA
 			<< " b = " << sideB
 			<< " c = " << sideC
@@ -126,7 +128,9 @@ public:
 
 	bool check() override
 	{
-		return (sidesCount == 4)&&((angleA + angleB + angleC + angleD) == 360);
+		bool b = ((sidesCount == 4) && ((angleA + angleB + angleC + angleD) == 360));
+		bool c = b;
+		return c;
 	}
 };
 
@@ -154,12 +158,14 @@ public:
 
 	bool check() override
 	{
-		bool c = triangle::check();
-		if ((angleC == 90) && c) c = true;
-		else c = false;
+		bool c;
+		bool d = triangle::check();
+		c = d;
+		if ((angleC == 90) && c) c = t;
 		return c;
 	}
 };
+
 // ravnobedreniy treugolnik
 class TwoEqualTriangle :public triangle
 {
@@ -187,7 +193,8 @@ public:
 	bool check() override
 	{
 		bool c = triangle::check();
-		c &= (sideA == sideC) && (angleA == angleC);
+		bool b = (sideA == sideC) && (angleA == angleC)&&(triangle::check());
+		c = b;
 		return c;
 	}
 };
@@ -222,8 +229,9 @@ public:
 
 	bool check() override
 	{
-		bool c = triangle::check();
-		c &= (sideA == sideB) && (sideB == sideC) && (angleA == angleB) && (angleB == angleC);
+		bool c;
+		bool b = (sideA == sideB) && (sideB == sideC) && (angleA == angleB) && (angleB == angleC) && triangle::check();
+		c = b;
 		return c;
 	}
 };
@@ -250,8 +258,9 @@ public:
 
 	bool check() override
 	{
-		bool c = square::check();
-		c &= (sideA == sideC) && (sideB == sideD) && (angleA == angleB) && (angleB == angleC) && (angleC == angleD) && (angleD == 90);
+		bool c;
+		bool b = (sideA == sideC) && (sideB == sideD) && (angleA == angleB) && (angleB == angleC) && (angleC == angleD) && (angleD == 90) && square::check();
+		c = b;
 		return c;
 	}
 };
@@ -276,8 +285,9 @@ public:
 
 	bool check() override
 	{
-		bool c = square::check();
-		c &= (sideA == sideB) && (sideB == sideC) && (sideC == sideD) && (angleA == angleB) && (angleB == angleC) && (angleC == angleD) && (angleD == 90);
+		bool c;
+		bool b = (sideA == sideB) && (sideB == sideC) && (sideC == sideD) && (angleA == angleB) && (angleB == angleC) && (angleC == angleD) && (angleD == 90) && square::check();
+		c = b;
 		return c;
 	}
 };
@@ -301,8 +311,8 @@ public:
 	}
 	bool check() override
 	{
-		bool c = square::check();
-		c &= (sideA == sideC) && (sideB == sideD) && (angleA == angleC) && (angleB == angleD);
+		bool b = square::check() && (sideA == sideC) && (sideB == sideD) && (angleA == angleC) && (angleB == angleD);
+		bool c = b;
 		return c;
 	}
 };
@@ -326,49 +336,57 @@ public:
 	}
 	bool check() override
 	{
-		bool c = square::check();
-		c &= (sideA == sideB) && (sideB == sideC) && (sideC == sideD) && (angleA == angleC) && (angleB == angleD);
+		bool d = square::check();
+		bool b = d && (sideA == sideB) && (sideB == sideC) && (sideC == sideD) && (angleA == angleC) && (angleB == angleD);
+		bool c = b;
 		return c;
 	}
 
 };
+void print(figure &f)
+{
+	f.print_info();
+}
 
 int main()
 {
 	setlocale(LC_ALL, "Russian");
 
 	figure      Figure;
-	Figure.print_info(Figure.check());
+//	Figure.print_info(Figure.check());
+	print(Figure);
 	cout << endl;
 
-	triangle    Triangle("Треугольник", 10, 20, 30, 50, 60, 70);
-	Triangle.print_info(Triangle.check());
+	triangle    Triangle;
+	print(Triangle);
+//	Triangle.print_info(Triangle.check());
 
 	StrengthTriangle Tr("Прямоугольный треугольник", 10, 20, 30, 50, 60, 90);
-	Tr.print_info(Tr.check());
-
+//	Tr.print_info(Tr.check());
+	print(Tr);
 	StrengthTriangle Tr1("Прямоугольный треугольник", 10, 20, 30, 50, 40, 90);
-	Tr1.print_info(Tr1.check());
-
+//	Tr1.print_info(Tr1.check());
+	print(Tr1);
 	TwoEqualTriangle Tr2("Равнобедренный треугольник", 10, 20, 10, 50, 60, 50);
-	Tr2.print_info(Tr2.check());
-
+//	Tr2.print_info(Tr2.check());
+	print(Tr2);
 	EqualSideTriangle Tr3("Равносторониий треугольник", 30, 30, 30, 60, 60, 60);
-	Tr3.print_info(Tr3.check());
-
+//	Tr3.print_info(Tr3.check());
+	print(Tr3);
 	square      Square;
-	Square.print_info(Square.check());
-
+//	Square.print_info(Square.check());
+	print(Square);
 	rectangle Square1("Прямоугольник", 10, 20);
-	Square1.print_info(Square1.check());
-
+//	Square1.print_info(Square1.check());
+	print(Square1);
 	equalSideRectangle Square2("Квадрат", 20);
-	Square2.print_info(Square2.check());
-
+//	Square2.print_info(Square2.check());
+	print(Square2);
 	parallelogramm Square3("Параллелограмм", 20, 30, 30, 40);
-	Square3.print_info(Square3.check());
-
+//	Square3.print_info(Square3.check());
+	print(Square3);
 	romb Square4("Ромб", 30, 30, 40);
-	Square4.print_info(Square4.check());
+//	Square4.print_info(Square4.check());
+	print(Square4);
 	return 0;
 }
